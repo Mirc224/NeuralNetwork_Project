@@ -194,17 +194,16 @@ X_val, X_test, Y_val, Y_test = train_test_split(X_val_and_test, Y_val_and_test, 
 
 # print(np.transpose(X_train[0:2]))
 
-# nn = MyNeuralNetwork([{'input_dim': 10, 'output_dim': 32, 'activation': 'sigmoid'},
-# {'input_dim': 32, 'output_dim': 32, 'activation': 'sigmoid'},
-# {'input_dim': 32, 'output_dim': 1, 'activation': 'sigmoid'}])
+nn = MyNeuralNetwork([{'input_dim': 10, 'output_dim': 32, 'activation': 'relu'},
+{'input_dim': 32, 'output_dim': 1, 'activation': 'sigmoid'}])
 # # nn = MyNeuralNetwork()
 # # nn.load_from_file()
 # # print(nn.predict(X_test[0].reshape((X_test[1].shape[0],1))))
 # # nn.predict()
-# nn.train(X_train.T, Y_train, 5000, 0.005, 1)
+nn.train(X_train.T, Y_train, 5000, 0.005, 32)
 # nn.save_to_file()
 # # print(nn.predict(X_test[1:10].T), Y_test[1:10])
-# print(nn.predict(X_test[1:10].T), Y_test[1:10])
+print(nn.predict(X_test[1:10].T), Y_test[1:10])
 # print(X_test[1:10].T.shape[0])
 # print(nn.predict(X_test[3]), Y_test[3])
 
@@ -258,38 +257,37 @@ X_val, X_test, Y_val, Y_test = train_test_split(X_val_and_test, Y_val_and_test, 
 # print("Length of train set x:",X_train.shape[0],"y:",y_train.shape[0])
 # print("Length of test set x:",X_test.shape[0],"y:",y_test.shape[0])
 
-train = pd.read_csv('./datasets/train_clean.csv')
-test = pd.read_csv('./datasets/test_clean.csv')
-df = pd.concat([train, test], axis=0, sort=True)
-
-
-df['Sex'] = df['Sex'].astype('category')
-df['Sex'] = df['Sex'].cat.codes
-categorical = ['Embarked', 'Title']
-for var in categorical:
-    df = pd.concat([df,
-                    pd.get_dummies(df[var], prefix=var)], axis=1)
-    del df[var]
-df.drop(['Cabin', 'Name', 'Ticket', 'PassengerId'], axis=1, inplace=True)
-print(df.head())
-
-continuous = ['Age', 'Fare', 'Parch', 'Pclass', 'SibSp', 'Family_Size']
-scaler = StandardScaler()
-
-for var in continuous:
-    df[var] = df[var].astype('float64')
-    df[var] = scaler.fit_transform(df[var].values.reshape(-1, 1))
-
-print(df[pd.notnull(df['Survived'])].drop(['Survived'], axis=1))
-X_train = df[pd.notnull(df['Survived'])].drop(['Survived'], axis=1).to_numpy()
-y_train = df[pd.notnull(df['Survived'])]['Survived'].to_numpy()
-X_test = df[pd.isnull(df['Survived'])].drop(['Survived'], axis=1).to_numpy()
-
-
-nn = MyNeuralNetwork([{'input_dim': X_train.shape[1], 'output_dim': 8, 'activation': 'linear'},
-{'input_dim': 8, 'output_dim': 1, 'activation': 'linear'},
-{'input_dim': 1, 'output_dim': 1, 'activation': 'sigmoid'}])
-
-nn.train(X_train.T, y_train, 5000, 0.025, 32)
-
-print(nn.predict(X_train[0:10].T), y_train[0:10])
+# train = pd.read_csv('./datasets/train_clean.csv')
+# test = pd.read_csv('./datasets/test_clean.csv')
+# df = pd.concat([train, test], axis=0, sort=True)
+#
+#
+# df['Sex'] = df['Sex'].astype('category')
+# df['Sex'] = df['Sex'].cat.codes
+# categorical = ['Embarked', 'Title']
+# for var in categorical:
+#     df = pd.concat([df,
+#                     pd.get_dummies(df[var], prefix=var)], axis=1)
+#     del df[var]
+# df.drop(['Cabin', 'Name', 'Ticket', 'PassengerId'], axis=1, inplace=True)
+# print(df.head())
+#
+# continuous = ['Age', 'Fare', 'Parch', 'Pclass', 'SibSp', 'Family_Size']
+# scaler = StandardScaler()
+#
+# for var in continuous:
+#     df[var] = df[var].astype('float64')
+#     df[var] = scaler.fit_transform(df[var].values.reshape(-1, 1))
+#
+# print(df[pd.notnull(df['Survived'])].drop(['Survived'], axis=1))
+# X_train = df[pd.notnull(df['Survived'])].drop(['Survived'], axis=1).to_numpy()
+# y_train = df[pd.notnull(df['Survived'])]['Survived'].to_numpy()
+# X_test = df[pd.isnull(df['Survived'])].drop(['Survived'], axis=1).to_numpy()
+#
+# nn = MyNeuralNetwork([{'input_dim': X_train.shape[1], 'output_dim': 8, 'activation': 'linear'},
+# {'input_dim': 8, 'output_dim': 4, 'activation': 'linear'},
+# {'input_dim': 4, 'output_dim': 1, 'activation': 'sigmoid'}])
+#
+# nn.train(X_train.T, y_train, 10000, 0.005, 64)
+#
+# print(nn.predict(X_train[10:20].T), y_train[10:20])
